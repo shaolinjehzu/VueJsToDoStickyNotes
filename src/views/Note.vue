@@ -8,7 +8,8 @@
         <form class="note--form was-validated">
             <div class="form-group">
                 <label for="customControlValidation1">Title</label>
-                <input type="text" class="form-control" id="customControlValidation1" placeholder="Enter the title of a note" v-model="stickyNote.title" required>
+                <input type="text" class="form-control" id="customControlValidation1"
+                       placeholder="Enter the title of a note" v-model="stickyNote.title" required>
                 <div class="invalid-feedback">
                     Please enter the title of a note
                 </div>
@@ -17,12 +18,14 @@
                 </div>
             </div>
 
-            <table class="table" v-if="stickyNote.title">
+            <table class="table">
                 <thead>
                 <tr>
                     <th scope="col">Completed</th>
                     <th scope="col">todo</th>
-                    <th scope="col"><button type="button" class="btn btn-primary btn-sm" @click="editTodo(null)">New</button></th>
+                    <th scope="col">
+                        <button type="button" class="btn btn-primary btn-sm" @click="editTodo(null)">New</button>
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -32,16 +35,17 @@
                     </th>
                     <th>
                         <div class="form-group" v-if="editTodoIndex == index">
-                            <input type="text" class="form-control" id="customControlValidation2" placeholder="Enter todo" v-model="todo.title" required>
+                            <input type="text" class="form-control" id="customControlValidation2"
+                                   placeholder="Enter todo" v-model="todo.title" required>
                         </div>
                         <span v-else>{{todo.title}}</span>
                     </th>
                     <th>
-                        <div  v-if="editTodoIndex == index" class="btn-group" role="group" aria-label="Basic example">
+                        <div v-if="editTodoIndex == index" class="btn-group" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-success" @click="saveTodo()">Save</button>
                             <button type="button" class="btn btn-danger" @click="confirmDiscard()">Cancel</button>
                         </div>
-                        <div  v-else class="btn-group" role="group" aria-label="Basic example">
+                        <div v-else class="btn-group" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-primary" @click="editTodo(index)">Edit</button>
                             <button type="button" class="btn btn-danger" @click="confirmRemove(index)">Remove</button>
                         </div>
@@ -53,7 +57,8 @@
                     </th>
                     <th>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="customControlValidation3" placeholder="Enter todo" v-model="newTodoElement.title" required>
+                            <input type="text" class="form-control" id="customControlValidation3"
+                                   placeholder="Enter todo" v-model="newTodoElement.title" required>
                             <div class="invalid-feedback">
                                 Please enter todo
                             </div>
@@ -74,18 +79,32 @@
         </form>
         <div class="note--buttons">
             <button type="button" class="btn btn-danger" @click="confirmDiscardNote()">Cancel</button>
-            <button v-if="$route.params.note_id != 'new'" class="btn btn-danger" @click="confirmRemoveNote()">Delete</button>
+            <button v-if="$route.params.note_id != 'new'" class="btn btn-danger" @click="confirmRemoveNote()">Delete
+            </button>
             <button type="button" class="btn btn-primary" @click="saveNote()">Save</button>
         </div>
-        <dialog-component v-if="confirmDeleteDialog" :title="'Confirm deletion'" :content="'Are you sure you want to delete the item?'"  :p-confirm-dialog.sync="confirmDeleteDialog" @on-confirm="removeTodo()" @on-cancel="clearTemporaryObjects()"></dialog-component>
-        <dialog-component v-if="confirmDeleteNoteDialog" :title="'Confirm deletion'" :content="'Are you sure you want to delete the item?'"  :p-confirm-dialog.sync="confirmDeleteNoteDialog" @on-confirm="removeNote()"></dialog-component>
-        <dialog-component v-if="confirmDiscardDialog" :title="'Confirm discard changes'" :content="'Are you sure you want to discard changes of the item?'"  :p-confirm-dialog.sync="confirmDiscardDialog" @on-confirm="cancelTodoChanges()" @on-cancel="clearTemporaryObjects()"></dialog-component>
-        <dialog-component v-if="confirmDiscardNoteDialog" :title="'Confirm discard changes'" :content="'Are you sure you want to discard changes of the item?'"  :p-confirm-dialog.sync="confirmDiscardNoteDialog" @on-confirm="cancelNoteChanges()"></dialog-component>
+        <dialog-component v-if="confirmDeleteDialog" :title="'Confirm deletion'"
+                          :content="'Are you sure you want to delete the item?'"
+                          :p-confirm-dialog.sync="confirmDeleteDialog" @on-confirm="removeTodo()"
+                          @on-cancel="clearTemporaryObjects()"></dialog-component>
+        <dialog-component v-if="confirmDeleteNoteDialog" :title="'Confirm deletion'"
+                          :content="'Are you sure you want to delete the item?'"
+                          :p-confirm-dialog.sync="confirmDeleteNoteDialog"
+                          @on-confirm="removeNote()"></dialog-component>
+        <dialog-component v-if="confirmDiscardDialog" :title="'Confirm discard changes'"
+                          :content="'Are you sure you want to discard changes of the item?'"
+                          :p-confirm-dialog.sync="confirmDiscardDialog" @on-confirm="cancelTodoChanges()"
+                          @on-cancel="clearTemporaryObjects()"></dialog-component>
+        <dialog-component v-if="confirmDiscardNoteDialog" :title="'Confirm discard changes'"
+                          :content="'Are you sure you want to discard changes of the item?'"
+                          :p-confirm-dialog.sync="confirmDiscardNoteDialog"
+                          @on-confirm="cancelNoteChanges()"></dialog-component>
     </div>
 </template>
 
 <script>
     import DialogComponent from "../components/DialogComponent";
+
     export default {
         name: "Note",
 
@@ -106,31 +125,34 @@
                 stickyNote: null,
             };
         },
-        computed:{
-            notes(){
+        computed: {
+            notes() {
                 return this.$store.getters["notes/notes"];
             },
         },
         methods: {
             //remove note element from array
-            removeNote(){
+            removeNote() {
                 this.$store.commit('notes/remove', this.$route.params.note_id);
                 this.$router.push('/');
             },
             //Confirm Note Deletion
-            confirmRemoveNote(){
+            confirmRemoveNote() {
                 this.confirmDeleteNoteDialog = true;
             },
             //Cancel note editing
-            cancelNoteChanges(){
+            cancelNoteChanges() {
                 this.$router.push('/');
             },
             //save new/editable note
-            saveNote(){
-                if(this.$route.params.note_id == 'new') {
+            saveNote() {
+                if (this.stickyNote.title.length == 0 || this.stickyNote.todos.length == 0) {
+                    return;
+                }
+                if (this.$route.params.note_id == 'new') {
                     this.$store.commit('notes/add', this.stickyNote);
                     this.$router.push('/');
-                } else{
+                } else {
                     let data = {
                         id: this.$route.params.note_id,
                         data: this.stickyNote
@@ -140,80 +162,80 @@
                 }
             },
             //confirm discard changes of the note element
-            confirmDiscardNote(){
+            confirmDiscardNote() {
                 this.confirmDiscardNoteDialog = true;
             },
             //Confirm discard changes of the todo element
-            confirmDiscard(){
+            confirmDiscard() {
                 this.confirmDiscardDialog = true;
                 let dialog = document.getElementById('confirmDialog');
-                dialog.addEventListener('keydown', function(e) {
+                dialog.addEventListener('keydown', function (e) {
                     console.log(e);
                 })
             },
             //clear temporary objects
-            clearTemporaryObjects(){
+            clearTemporaryObjects() {
                 this.editTodoElement = null
                 this.newTodoElement = null;
                 this.editTodoIndex = null;
                 this.itemToDelete = null;
             },
             //cancel change of the todo element
-            cancelTodoChanges(){
-                if(this.editTodoElement) {
+            cancelTodoChanges() {
+                if (this.editTodoElement) {
                     this.stickyNote.todos[this.editTodoIndex] = Object.assign({}, this.editTodoElement);
                     this.clearTemporaryObjects();
-                } else{
+                } else {
                     this.clearTemporaryObjects();
                 }
             },
             //save todo element
-            saveTodo(){
-                if(this.newTodoElement && this.newTodoElement.title){
+            saveTodo() {
+                if (this.newTodoElement && this.newTodoElement.title) {
                     this.stickyNote.todos.push(this.newTodoElement);
                     this.clearTemporaryObjects();
-                } else if(this.newTodoElement && !this.newTodoElement.title) {
+                } else if (this.newTodoElement && !this.newTodoElement.title) {
                     return;
-                } else{
+                } else {
                     this.clearTemporaryObjects();
                 }
             },
             //Confirm todo deletion
-            confirmRemove(index){
+            confirmRemove(index) {
                 this.confirmDeleteDialog = true;
                 this.itemToDelete = index;
             },
             //remove todo element from array
-            removeTodo(){
+            removeTodo() {
                 this.stickyNote.todos.splice(this.itemToDelete, 1);
                 this.clearTemporaryObjects();
             },
             //edit todo element
-            editTodo(id){
-                if(this.editTodoElement || this.newTodoElement){
+            editTodo(id) {
+                if (this.editTodoElement || this.newTodoElement) {
                     return;
                 }
-                if(id == null){
+                if (id == null) {
                     this.newTodoElement = {
                         title: '',
                         completed: false
                     }
-                } else{
+                } else {
                     this.editTodoIndex = id;
                     this.editTodoElement = Object.assign({}, this.stickyNote.todos[id]);
                 }
             },
         },
-        created(){
-            if(this.notes.length == 0){
+        created() {
+            if (this.notes.length == 0) {
                 this.$store.dispatch('notes/list');
             }
-            if(this.$route.params.note_id == 'new'){
+            if (this.$route.params.note_id == 'new') {
                 this.stickyNote = Object.assign({}, {
                     title: '',
                     todos: []
                 })
-            } else{
+            } else {
                 this.stickyNote = Object.assign({}, this.notes[this.$route.params.note_id]);
             }
         },
@@ -228,9 +250,9 @@
         width: 50%;
         padding: 30px;
         margin: 0 auto;
-        display:flex;
+        display: flex;
         flex-direction: column;
-        align-items:center;
+        align-items: center;
         justify-content: center;
 
 
@@ -240,13 +262,13 @@
 
         .note--form {
             margin-top: 1.1em;
-            width:100%;
+            width: 100%;
         }
 
-        .note--buttons{
-            width:100%;
+        .note--buttons {
+            width: 100%;
             margin-top: 1.8em;
-            display:flex;
+            display: flex;
             flex-direction: row;
             justify-content: space-between;
         }

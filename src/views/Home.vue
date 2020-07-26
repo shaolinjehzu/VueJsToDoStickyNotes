@@ -1,25 +1,31 @@
 <template>
-    <div class="home">
-        <div class="card" v-for="(note, noteIndex) in notes" :key="noteIndex">
-            <div class="card-body">
-                <h5 class="card-title">{{note.title}}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Todos:</h6>
+    <div>
+        <div class="home" v-if="this.notes.length > 0">
+            <div class="card" v-for="(note, noteIndex) in notes" :key="noteIndex">
+                <div class="card-body">
+                    <h5 class="card-title">{{note.title}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Todos:</h6>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" v-for="(todo, todoIndex) in note.todos" :key="-todoIndex">
+                        <span v-if="todo.completed"><s>{{todo.title}}</s></span>
+                        <span v-else>{{todo.title}}</span>
+                    </li>
+                </ul>
+                <div class="card-body buttons-wrapper">
+                    <button class="btn btn-danger" @click="confirmRemoveNote(noteIndex)">Delete</button>
+                    <router-link :to="'/note/'+noteIndex" class="btn btn-primary">Edit</router-link>
+                </div>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item" v-for="(todo, todoIndex) in note.todos" :key="-todoIndex">
-                    <span v-if="todo.completed"><s>{{todo.title}}</s></span>
-                    <span v-else>{{todo.title}}</span>
-                </li>
-            </ul>
-            <div class="card-body buttons-wrapper">
-                <button class="btn btn-danger" @click="confirmRemoveNote()">Delete</button>
-                <router-link :to="'/note/'+noteIndex" class="btn btn-primary">Edit</router-link>
-            </div>
+            <dialog-component v-if="confirmDeleteNoteDialog" :title="'Confirm deletion'"
+                              :content="'Are you sure you want to delete the item?'"
+                              :p-confirm-dialog.sync="confirmDeleteNoteDialog"
+                              @on-confirm="removeNote()"></dialog-component>
         </div>
-        <dialog-component v-if="confirmDeleteNoteDialog" :title="'Confirm deletion'"
-                          :content="'Are you sure you want to delete the item?'"
-                          :p-confirm-dialog.sync="confirmDeleteNoteDialog"
-                          @on-confirm="removeNote()"></dialog-component>
+        <div class="home" v-else>
+            <router-link style="margin-top: 2em;" to="/note/new"><h2>Click here to create your first note!</h2>
+            </router-link>
+        </div>
     </div>
 </template>
 
@@ -35,6 +41,7 @@
         data() {
             return {
                 confirmDeleteNoteDialog: false,
+                noteToRemove: null,
             }
         },
         computed: {
@@ -45,10 +52,12 @@
         methods: {
             //remove note element from array
             removeNote() {
-                this.$store.commit('notes/remove', this.$route.params.note_id)
+                this.$store.commit('notes/remove', this.noteToRemove)
+                this.noteToRemove = null;
             },
             //Confirm Note Deletion
-            confirmRemoveNote() {
+            confirmRemoveNote(index) {
+                this.noteToRemove = index;
                 this.confirmDeleteNoteDialog = true;
             },
         },
