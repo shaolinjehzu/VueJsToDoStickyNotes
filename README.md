@@ -1,10 +1,10 @@
-#Vue Todo Sticky Notes App
+# Vue Todo Sticky Notes App
 
 ![Альтернативный текст](src/assets/logo.png) 
 
 
 
-##QUICK START
+## QUICK START
 The stack is built using vue-cli webpack so to get started all you have to do is:
 
 ```sh
@@ -32,7 +32,7 @@ if you are using yarn
    > yarn serve
 ```
 
-##To know
+## To know
 Current arbitrary choices are:
 
  - Vuex modules for store
