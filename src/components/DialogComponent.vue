@@ -12,7 +12,8 @@
                     <p>{{content}}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="confirmCancel">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="confirmCancel">Cancel
+                    </button>
                     <button type="button" class="btn btn-primary" @click="confirmAction">Confirm</button>
                 </div>
             </div>
@@ -29,38 +30,36 @@
         },
         name: "DeleteComponent",
 
-        data(){
-            return {
-
-            }
+        data() {
+            return {}
         },
         computed: {
             confirmDialog: {
-                get(){
+                get() {
                     return this.pConfirmDialog;
                 },
-                set(v){
+                set(v) {
                     this.$emit('update:pConfirmDialog', v);
                 }
             }
         },
         methods: {
-            confirmCancel(){
+            confirmCancel() {
                 this.$emit('on-cancel');
                 this.confirmDialog = false;
             },
-            confirmAction(){
+            confirmAction() {
                 this.$emit('on-confirm');
                 this.confirmDialog = false;
             },
-            checkClose(e){
+            checkClose(e) {
                 console.log(e);
             }
         },
-        mounted(){
+        mounted() {
             let dialog = document.getElementById('confirm-dialog');
             dialog.addEventListener('keydown', event => {
-                if(event.key == 'Escape'){
+                if (event.key == 'Escape') {
                     this.confirmCancel();
                 }
             })
@@ -72,7 +71,7 @@
 <style lang="scss" scoped>
     @import '~bootstrap/scss/bootstrap.scss';
 
-    .modal.delete--dialog{
+    .modal.delete--dialog {
         display: block;
     }
 
